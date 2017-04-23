@@ -1,9 +1,9 @@
 "use strict";
-var assert    = require("chai").assert;
+var assert = require("chai").assert;
 var immutable = require("seamless-immutable");
-var merger    = require("../seamless-immutable-mergers").updatingByIdArrayMerger;
+var merger = require("../seamless-immutable-mergers").updatingByIdArrayMerger;
 
-describe("UpdatingByIdArrayMerger", function() {
+describe("UpdatingByIdArrayMerger", function () {
   var config = {
     deep: true,
     merger: merger,
@@ -15,7 +15,7 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.equal(obj1.data, obj2.data);
   }
 
-  it("merges like a normal merge with everything except arrays", function() {
+  it("merges like a normal merge with everything except arrays", function () {
     var current = immutable({
       number: 1,
       string: "One",
@@ -40,7 +40,7 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.deepEqual(resultNormal, resultMerger);
   });
 
-  it("merges like a normal merge when there aren't two arrays to merge", function() {
+  it("merges like a normal merge when there aren't two arrays to merge", function () {
     var current = immutable({
       arrayOne: [1, 3, 5]
     });
@@ -55,21 +55,21 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.deepEqual(resultNormal, resultMerger);
   });
 
-  it("merges like a normal merge when there aren't two arrays with objects that contains the specified id", function() {
+  it("merges like a normal merge when there aren't two arrays with objects that contains the specified id", function () {
     var current = immutable({
       arrayOne: [1, 3, 5],
       arrayTwo: [],
-      arrayThree: [{data: 1}],
-      arrayFour: [{id: 1, data: 2}],
+      arrayThree: [{ data: 1 }],
+      arrayFour: [{ id: 1, data: 2 }],
       arrayFive: []
     });
 
     var update = {
       arrayOne: [2, 4],
       arrayTwo: [5, 5],
-      arrayThree: [{data: 2}, {data: 4}],
-      arrayFour: [{id: 1, data: 3}, {id: 2, data: 4}],
-      arrayFive: [{id: 1, data: 2}]
+      arrayThree: [{ data: 2 }, { data: 4 }],
+      arrayFour: [{ id: 1, data: 3 }, { id: 2, data: 4 }],
+      arrayFive: [{ id: 1, data: 2 }]
     };
 
     var result = current.merge(update, config);
@@ -89,7 +89,7 @@ describe("UpdatingByIdArrayMerger", function() {
     compareTestObjects(result.arrayFive[0], update.arrayFive[0]);
   });
 
-  it("correctly merges objects in arrays", function() {
+  it("correctly merges objects in arrays", function () {
     var current = immutable({
       array: [
         {
@@ -128,7 +128,7 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.equal(secondObject.content, "media");
   });
 
-  it("deeply merges arrays in merged objects", function() {
+  it("deeply merges arrays in merged objects", function () {
     var current = immutable({
       array: [
         {
@@ -185,7 +185,7 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.equal(items[1].content, "media");
   });
 
-  it("doesn't empty an array when the push contains an empty array", function() {
+  it("doesn't empty an array when the push contains an empty array", function () {
     var current = immutable({
       array: [
         {
@@ -211,7 +211,7 @@ describe("UpdatingByIdArrayMerger", function() {
     assert.equal(result.array.length, 1);
   });
 
-  it("doesn't deeply empty an array when the push contains an empty array", function() {
+  it("doesn't deeply empty an array when the push contains an empty array", function () {
     var current = immutable({
       array: [
         {
@@ -244,5 +244,20 @@ describe("UpdatingByIdArrayMerger", function() {
     var resultObject = result.array[0];
     var items = resultObject.items;
     assert.equal(items.length, 1);
+  });
+
+  it.only("array should not changed if the array to be merged is the same", function () {
+    var array = [
+      {
+        id: 10,
+        status: "ok",
+        content: "text"
+      }
+    ];
+    var current = immutable({ array });
+    var noUpdate = { array };
+
+    var result = current.merge(noUpdate, config);
+    assert.equal(result, current);
   });
 });

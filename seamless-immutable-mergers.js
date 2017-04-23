@@ -56,7 +56,16 @@
       }
     }
 
-    return immutable(resultList);
+    if (resultList.length !== current.length) return immutable(resultList);
+
+    var isEqual = true;
+    for (var k = 0; k < current.length; k++) {
+      if (current[k] !== resultList[k]) {
+        isEqual = false;
+        break;
+      }
+    }
+    return isEqual ? current : immutable(resultList);
   }
 
   // Export the library
