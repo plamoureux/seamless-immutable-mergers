@@ -14,12 +14,15 @@
     return current.concat(other);
   }
 
-  function equalityArrayMerger(current, other) {
+  function equalityArrayMerger(current, other, config) {
     if (!(current instanceof Array) || !(other instanceof Array)) return;
     if (current.length !== other.length) return;
 
     for (var i = 0; i < current.length; i++) {
-      if (current[i] !== other[i]) return;
+      if (current[i] !== other[i]) {
+        if (!current[i].merge) return;
+        if (current[i] !== current[i].merge(other[i], config)) return;
+      }
     }
 
     return current;
@@ -58,14 +61,10 @@
 
     if (resultList.length !== current.length) return immutable(resultList);
 
-    var isEqual = true;
     for (var k = 0; k < current.length; k++) {
-      if (current[k] !== resultList[k]) {
-        isEqual = false;
-        break;
-      }
+      if (current[k] !== resultList[k]) return;
     }
-    return isEqual ? current : immutable(resultList);
+    return current;
   }
 
   // Export the library

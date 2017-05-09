@@ -1,15 +1,15 @@
 "use strict";
-var assert    = require("chai").assert;
+var assert = require("chai").assert;
 var immutable = require("seamless-immutable");
-var merger    = require("../seamless-immutable-mergers").equalityArrayMerger;
+var merger = require("../seamless-immutable-mergers").equalityArrayMerger;
 
-describe("EqualityArrayMerger", function() {
+describe("EqualityArrayMerger", function () {
   var config = {
     merger: merger
   };
 
-  it("gives the same reference back if the arrays contains the same items", function() {
-    var data = {a: [1, 2]};
+  it("gives the same reference back if the arrays contains the same items", function () {
+    var data = { a: [1, 2] };
     var data2 = data;
     assert.equal(data, data2);
 
@@ -21,9 +21,9 @@ describe("EqualityArrayMerger", function() {
     assert.equal(current, resultWithMerger);
   });
 
-  it("doesn't give the same reference back if the arrays contains different items", function() {
-    var data = {a: [1, 2]}
-    var data2 = {a: [2,1]};
+  it("doesn't give the same reference back if the arrays contains different items", function () {
+    var data = { a: [1, 2] }
+    var data2 = { a: [2, 1] };
     assert.notEqual(data, data2);
 
     var current = immutable(data);
@@ -32,5 +32,14 @@ describe("EqualityArrayMerger", function() {
 
     var resultWithMerger = current.merge(data2, config);
     assert.notEqual(current, resultWithMerger);
+  });
+
+  it("should not changed if the array to be merged is the same", function () {
+    var array = [{ a: 1 }];
+    var current = immutable({ array });
+    var noUpdate = { array };
+
+    var result = current.merge(noUpdate, config);
+    assert.equal(result, current);
   });
 });

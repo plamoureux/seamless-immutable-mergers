@@ -246,7 +246,7 @@ describe("UpdatingByIdArrayMerger", function () {
     assert.equal(items.length, 1);
   });
 
-  it.only("array should not changed if the array to be merged is the same", function () {
+  it("should not changed if the array to be merged is the same", function () {
     var array = [
       {
         id: 10,
